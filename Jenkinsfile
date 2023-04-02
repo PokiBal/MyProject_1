@@ -8,7 +8,8 @@ pipeline {
                 $class: 'GitSCM',
                 branchs: [[name: 'main']],
                 userRemoteConfit : [[
-                    url: 'git@github.com:PokiBal/MyProject_1.git'
+                    url: 'git@github.com:PokiBal/MyProject_1.git',
+                    credentialsId: ''
                 ]]
              ])
            }
