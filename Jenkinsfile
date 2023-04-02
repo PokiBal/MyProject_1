@@ -10,7 +10,7 @@ pipeline {
                 userRemoteConfit : [[
                     url: 'git@github.com:PokiBal/MyProject_1.git'
                 ]]
-            ])
+             ])
            }
        }
         stage('Test') {
