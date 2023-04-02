@@ -11,11 +11,12 @@ pipeline {
                     url: 'git@github.com:PokiBal/MyProject_1.git'
                 ]]
             ])
-         }
-    }
+           }
+       }
         stage('Test') {
             steps {
                 echo "this is a test"
             }
         }
+   }
 }
