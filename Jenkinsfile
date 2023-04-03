@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent {lable "slave1"}
     
     stages {
         stage('GitSCM') {
