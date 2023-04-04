@@ -46,7 +46,10 @@ pipeline {
                 echo "UploadToS3Bucket"
             }
         }
+    }
 }
-}
+
+
+
 
 
