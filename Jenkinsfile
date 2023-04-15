@@ -53,8 +53,8 @@ pipeline {
                 data['time'] = sh 'echo "$TIME"'
                 data['username'] = sh 'echo ${BUILD_USER}'
                 data['testresult'] = _testResults
-                def json = new groovy.json.JsonBuilder(data)
-                sh "echo '${json.toPrettyString()}' > TestResullt.json"
+                def json = new groovy.json.JsonSlurperClassic().toJson(data)
+                sh "echo '${json}' > TestResullt.json"
                 }
             }
         }
