@@ -50,9 +50,6 @@ pipeline {
         stage('SaveResultsToJson'){
             steps {
                 script{
-                import groovy.json.JsonBuilder
-                //writeJSON(file: 'testResults.json', json: testResults)
-                
                 def data = [:]
                 data['time'] = sh 'echo "$TIME"'
                 data['username'] = sh 'echo ${BUILD_USER}'
