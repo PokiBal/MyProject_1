@@ -1,3 +1,4 @@
+
 pipeline {
     agent {label "slave1"}
     environment {
@@ -27,8 +28,9 @@ pipeline {
         }
         stage("build user") {
             steps{
-                wrap([$class: 'BuildUser', useGitAuthor: true]) {
-                }
+            wrap([$class: 'BuildUser', useGitAuthor: true]) {
+                sh "username=${BUILD_USER}"     
+            }
             }
         }
         stage('Test') {
@@ -49,10 +51,13 @@ pipeline {
         stage('SaveResultsToJson'){
             steps {
                 script{
+                    
                 def data = [:]
                 data['time'] = sh 'echo "$TIME"'
-                data['username'] = sh 'echo "${BUILD_USER}"'
+                data['username'] = username
                 data['testresult'] = _testResults
+                //def json = new groovy.json.JsonBuilder(data)
+                //sh "echo '${json.toPrettyString()}' > TestResullt.json"
                 def json = new groovy.json.JsonSlurperClassic().toJson(data)
                 sh "echo '${json}' > TestResullt.json"
                 }
