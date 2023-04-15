@@ -36,11 +36,11 @@ pipeline {
                 script {
                     def strResult = sh(returnStdout: true, script: 'curl -IsS https://checkip.amazonaws.com | grep HTTP || true')
                     if (strResult.trim() == "HTTP/1.1 200 OK") {
-                        testResults = "Success" 
+                        _testResults = "Success" 
                     } 
                     else {
                         error 'Unexpected response status code - HTTP/1.1 404 Not Found'
-                        testResults = "Failed" 
+                        _testResults = "Failed" 
                     }
                 }
             }
@@ -52,7 +52,7 @@ pipeline {
                 def data = [:]
                 data['time'] = sh 'echo "$TIME"'
                 data['username'] = sh 'echo ${BUILD_USER}'
-                data['date'] = sh(script: 'date "+%Y-%m-%d"', returnStdout: true).trim()
+                data['testresult'] = _testResults
                 def json = new groovy.json.JsonBuilder(data)
                 sh "echo '${json.toPrettyString()}' > TestResullt.json"
                 }
