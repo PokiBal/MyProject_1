@@ -31,18 +31,18 @@ pipeline {
                 }
             }
         }
-        stage('SaveResultsToJson'){
+        stage('Test') {
             steps {
-                script{
-                import groovy.json.JsonBuilder
-                //writeJSON(file: 'testResults.json', json: testResults)
-                
-                def data = [:]
-                data['time'] = sh 'echo "$TIME"'
-                data['username'] = sh 'echo ${BUILD_USER}'
-                data['date'] = sh(script: 'date "+%Y-%m-%d"', returnStdout: true).trim()
-                def json = new JsonBuilder(data)
-                sh "echo '${json.toPrettyString()}' > TestResullt.json"
+                script {
+                    def strResult = sh(returnStdout: true, script: 'curl -I https://checkip.amazonaws.com | grep HTTP')
+                    //strResult = curl -I https://checkip.amazonaws.com | grep HTTP
+                    if (strResult == "HTTP/1.1 200 OK") {
+                        testResults = "Success" 
+                    } 
+                    else {
+                        error 'Unexpected response status code - HTTP/1.1 404 Not Found'
+                        testResults = "Failed" 
+                    }
                 }
             }
         }
