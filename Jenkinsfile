@@ -16,7 +16,7 @@ pipeline {
                     credentialsId: ''
                 ]]
             ])
-         }
+            }
         }
         stage('Build DockerImage'){
             steps{
@@ -33,7 +33,8 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    strResult = curl -I https://checkip.amazonaws.com | grep HTTP
+                    def strResult = sh(returnStdout: true, script: 'curl -I https://checkip.amazonaws.com | grep HTTP')
+                    //strResult = curl -I https://checkip.amazonaws.com | grep HTTP
                     if (strResult == "HTTP/1.1 200 OK") {
                         testResults = "Success" 
                     } 
@@ -63,6 +64,3 @@ pipeline {
         }
     }
 }
-
-
-
