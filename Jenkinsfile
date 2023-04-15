@@ -1,46 +1,60 @@
 pipeline {
     agent {label "slave1"}
-    
+    environment {
+        TIME = sh(script: 'date "+%Y-%m-%d %H:%M:%S"', returnStdout: true).trim()
+    }
     stages {
         stage('GitSCM') {
             steps {
                 checkout([
                 $class: 'GitSCM',
-//branches - can add more than 1 branch
+                //branches - can add more than 1 branch
                 branches: [[name: 'main']],
-//add the usrl for the branch you want to coonect to, adding the ssh url or https???
+                //add the usrl for the branch you want to coonect to, adding the ssh url or https???
                 userRemoteConfigs: [[
                     url: 'https://github.com/PokiBal/MyProject_1.git',
                     credentialsId: ''
                 ]]
             ])
          }
-    }
+        }
         stage('Build DockerImage'){
             steps{
                 sh 'docker build -t flask_docker .'
                 sh 'docker run -p 5000:5000 -d flask_docker'
             }
         }
-        stage('Test_Save') {
+        stage("build user") {
+            steps{
+                wrap([$class: 'BuildUser', useGitAuthor: true]) {
+                }
+        }
+        stage('Test') {
             steps {
                 script {
-                    ip = Curl https://checkip.amazonaws.com
-                    def response = httpRequest url: f"{ip}:5000"
-                    strResult = ''
-                    if (response.status == 200) {
-                        strResult = "Success" 
+                    strResult = curl -I https://checkip.amazonaws.com | grep HTTP
+                    if (strResult == "HTTP/1.1 200 OK") {
+                        testResults = "Success" 
                     } 
                     else {
-                        error 'Unexpected response status code'
-                        strResult = "Failed" 
+                        error 'Unexpected response status code - HTTP/1.1 404 Not Found'
+                        testResults = "Failed" 
                     }
-                def my_dict = ["message": strResult]
-                writeJSON(file: 'result.json', json: my_dict)
                 }
             }
         }
 
+        stage('SaveResultsToJson'){
+            steps {
+                //writeJSON(file: 'testResults.json', json: testResults)
+                def data = [:]
+                data['time'] = env.TIME
+                data['username'] = env.BUILD_USER
+                data['date'] = sh(script: 'date "+%Y-%m-%d"', returnStdout: true).trim()
+                def json = new JsonBuilder(data)
+                sh "echo '${json.toPrettyString()}' > time.json"
+            }
+        }
         stage('UploadToS3Bucket') {
             steps {
                 echo "UploadToS3Bucket"
@@ -48,7 +62,6 @@ pipeline {
         }
     }
 }
-
 
 
 
