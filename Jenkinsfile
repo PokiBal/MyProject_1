@@ -57,7 +57,7 @@ pipeline {
                 data['time'] = sh 'echo "$TIME"'
                 data['username'] = sh 'echo ${BUILD_USER}'
                 data['date'] = sh(script: 'date "+%Y-%m-%d"', returnStdout: true).trim()
-                def json = new JsonBuilder(data)
+                def json = new groovy.json.JsonBuilder(data)
                 sh "echo '${json.toPrettyString()}' > TestResullt.json"
                 }
             }
