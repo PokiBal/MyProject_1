@@ -49,6 +49,7 @@ pipeline {
 
         stage('SaveResultsToJson'){
             steps {
+                script{
                 import groovy.json.JsonBuilder
                 //writeJSON(file: 'testResults.json', json: testResults)
                 
@@ -58,6 +59,7 @@ pipeline {
                 data['date'] = sh(script: 'date "+%Y-%m-%d"', returnStdout: true).trim()
                 def json = new JsonBuilder(data)
                 sh "echo '${json.toPrettyString()}' > TestResullt.json"
+                }
             }
         }
         stage('UploadToS3Bucket') {
