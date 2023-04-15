@@ -50,6 +50,9 @@ pipeline {
 
         stage('SaveResultsToJson'){
             steps {
+                
+                import groovy.json.JsonBuilder
+
                 //writeJSON(file: 'testResults.json', json: testResults)
                 def data = [:]
                 data['time'] = env.TIME
