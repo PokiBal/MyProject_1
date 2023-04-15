@@ -28,6 +28,7 @@ pipeline {
             steps{
                 wrap([$class: 'BuildUser', useGitAuthor: true]) {
                 }
+            }
         }
         stage('Test') {
             steps {
@@ -62,7 +63,6 @@ pipeline {
         }
     }
 }
-
 
 
 
