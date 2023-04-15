@@ -45,6 +45,8 @@ pipeline {
                 }
             }
         }
+        
+        import groovy.json.JsonBuilder
 
         stage('SaveResultsToJson'){
             steps {
