@@ -3,6 +3,7 @@ pipeline {
     environment {
         TIME = sh(script: 'date "+%Y-%m-%d %H:%M:%S"', returnStdout: true).trim()
     }
+
     stages {
         stage('GitSCM') {
             steps {
@@ -45,21 +46,18 @@ pipeline {
                 }
             }
         }
-        
-        import groovy.json.JsonBuilder
 
         stage('SaveResultsToJson'){
             steps {
-                
                 import groovy.json.JsonBuilder
-
                 //writeJSON(file: 'testResults.json', json: testResults)
+                
                 def data = [:]
-                data['time'] = env.TIME
-                data['username'] = env.BUILD_USER
+                data['time'] = sh 'echo "$TIME"'
+                data['username'] = sh 'echo ${BUILD_USER}'
                 data['date'] = sh(script: 'date "+%Y-%m-%d"', returnStdout: true).trim()
                 def json = new JsonBuilder(data)
-                sh "echo '${json.toPrettyString()}' > time.json"
+                sh "echo '${json.toPrettyString()}' > TestResullt.json"
             }
         }
         stage('UploadToS3Bucket') {
