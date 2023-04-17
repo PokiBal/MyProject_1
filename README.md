@@ -1,6 +1,6 @@
 
 
-# My First Project in Cloud Native DevOPs Course
+# My First Project in Cloud Native DevOps Course
 
 **This is my project for...** and I'm excited to get started!
 
