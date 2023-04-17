@@ -2,7 +2,7 @@
 
 # My First Project in Cloud Native DevOPs Course
 
-**This is my first project** and I'm excited to get started!
+**This is my project for...** and I'm excited to get started!
 
 ## Introduction
 
