@@ -4,6 +4,11 @@ pipeline {
         TIME = sh(script: 'date "+%Y-%m-%d %H:%M:%S"', returnStdout: true).trim()
     }
 
+    parameters {
+        string(name: 'imageName', defaultValue: '', description: 'Name of the Docker image')
+        string(name: 'imageTag', defaultValue: '', description: 'Image tag for Docker build')
+    }
+
     stages {
         stage('GitSCM') {
             steps {
@@ -21,8 +26,14 @@ pipeline {
         }
         stage('Build DockerImage'){
             steps{
-                sh 'docker build -t flask_docker .'
-                sh 'docker run -p 5000:5000 -d flask_docker'
+                echo "build image"
+                //sh "docker build -t imageName:imageTag ."
+                // sh 'docker run -p 5000:5000 -d flask_docker'
+            }
+        }
+        stage('Run Container'){
+            steps{
+                echo "build image"
             }
         }
         stage("build user") {
@@ -35,29 +46,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                script {
-                    def strResult = sh(returnStdout: true, script: 'curl -IsS https://checkip.amazonaws.com | grep HTTP || true')
-                    if (strResult.trim() == "HTTP/1.1 200 OK") {
-                        _testResults = "Success" 
-                    } 
-                    else {
-                        error 'Unexpected response status code - HTTP/1.1 404 Not Found'
-                        _testResults = "Failed" 
-                    }
-                }
-            }
-        }
-
-        stage('SaveResultsToJson'){
-            steps {
-                script{
-                    def data = [:]
-                    data['time'] = sh 'echo "$TIME"'
-                    data['username'] = env.USERNAME
-                    data['testresult'] = _testResults
-                    def json = new groovy.json.JsonSlurperClassic().toJson(data)
-                    sh "echo '${json}' > TestResullt.json"
-                }
+                echo "test"
             }
         }
 
