@@ -28,7 +28,7 @@ pipeline {
             steps{
                 echo "build image"
                 sh "docker build -t imagename:imagetag ."
-                sh 'docker run -p 5000:5000 -d flask_docker'
+                sh 'docker run -p 5000:5000 -d imagename'
             }
         }
         stage("build user") {
