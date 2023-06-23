@@ -33,6 +33,12 @@ pipeline {
                 }
             }
         }
+            stage('Run Container'){
+            steps{
+                sh "docker run -it --name my-flask-container -p 5000:5000 -d ${params.imagename}:${params.imagetag}"
+                }
+            }
+        }
         stage("build user") {
             steps{
                 wrap([$class: 'BuildUser', useGitAuthor: true]) {
