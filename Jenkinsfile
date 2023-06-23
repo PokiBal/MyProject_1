@@ -5,8 +5,8 @@ pipeline {
     }
 
     parameters {
-        string(name: 'imageName', defaultValue: '', description: 'Name of the Docker image')
-        string(name: 'imageTag', defaultValue: '', description: 'Image tag for Docker build')
+        string(name: 'imagename', defaultValue: '', description: 'Name of the Docker image')
+        string(name: 'imagetag', defaultValue: '', description: 'Image tag for Docker build')
     }
 
     stages {
@@ -27,8 +27,8 @@ pipeline {
         stage('Build DockerImage'){
             steps{
                 echo "build image"
-                //sh "docker build -t imageName:imageTag ."
-                // sh 'docker run -p 5000:5000 -d flask_docker'
+                sh "docker build -t ${params.imagenam}:${params.imagetag} ."
+                sh "docker run -p 5000:5000 -d --name my-flask-container ${params.imagename}"
             }
         }
         stage('Run Container'){
