@@ -27,7 +27,7 @@ pipeline {
         stage('Build DockerImage'){
             steps{
                 echo "build image"
-                sh "docker build -t ${params.imagenam}:${params.imagetag} ."
+                sh "docker build -t ${params.imagename}:${params.imagetag} ."
                 sh "docker run -p 5000:5000 -d --name my-flask-container ${params.imagename}"
             }
         }
