@@ -27,13 +27,9 @@ pipeline {
         stage('Build DockerImage'){
             steps{
                 echo "build image"
+                dir('/home/ubuntu/workspace/build and test pipeline/production_app')
                 sh "docker build -t ${params.imagename}:${params.imagetag} ."
-                sh "docker run -p 5000:5000 -d --name my-flask-container ${params.imagename}"
-            }
-        }
-        stage('Run Container'){
-            steps{
-                echo "build image"
+                sh "docker run -it --name my-flask-container -p 5000:5000 -d ${params.imagename}"
             }
         }
         stage("build user") {
