@@ -5,8 +5,8 @@ pipeline {
     }
 
     parameters {
-        string(name: 'imageName', defaultValue: '', description: 'Name of the Docker image')
-        string(name: 'imageTag', defaultValue: '', description: 'Image tag for Docker build')
+        string(name: 'imagename', defaultValue: '', description: 'Name of the Docker image')
+        string(name: 'imagetag', defaultValue: '', description: 'Image tag for Docker build')
     }
 
     stages {
