@@ -41,7 +41,7 @@ def signup():
             return redirect("/Welcome?fullname=" + full_name)
     except Exception as e:
         logging.error("An error occurred during database operations: %s", str(e))
-    return render_template("signup.html")
+    return render_template("Signup.html")
 
 
 @app.route('/Welcome')
