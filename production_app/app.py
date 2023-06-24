@@ -4,6 +4,7 @@ from flask import Flask, request, redirect,render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask.templating import render_template
 
+
 app =  Flask(__name__)
 
 #this line connect to the db and create new db (table?) named registrations
