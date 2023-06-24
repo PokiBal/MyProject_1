@@ -43,7 +43,6 @@ pipeline {
         stage('Run Container'){
             steps{
                 sh "docker run -it --name my-flask -p 5000:5000 -d ${params.imagename}:${params.imagetag}"
-                // sh "sudo docker run -it --name flaskApp -p 5000:5000 -d flask_image:${VERSION}"
                 }
         }
         stage("build user") {
@@ -57,12 +56,25 @@ pipeline {
         stage('Test') {
             steps {
                 echo "test"
+                dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app'){
+                sh 'pytest tests.py::Test_class --html=test_report.html'
+                }
             }
         }
 
         stage('UploadToS3Bucket') {
             steps {
                 echo "UploadToS3Bucket"
+            }
+        }
+        stage('UploadToDunamoDB') {
+            steps {
+                echo "UploadToDynamo"
+            }
+        }
+        stage('UploadToDockerHub') {
+            steps {
+                echo "UploadToDockerHUb"
             }
         }
     }
