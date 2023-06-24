@@ -16,9 +16,9 @@ COPY . /app
 # configure the container to run in an executed manner
 #ENTRYPOINT [ "python" ]
 
-# CMD [ "python", "app.py", "inbal"]
+CMD [ "python", "app.py"]
 
 
-ENV USERNAME ""
+# ENV USERNAME ""
 
-CMD ["sh", "-c", "export USERNAME=$USERNAME && python3 app.py"]
+# CMD ["sh", "-c", "export USERNAME=$USERNAME && python3 app.py"]
