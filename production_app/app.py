@@ -2,9 +2,7 @@ import logging
 import os.path
 from flask import Flask, request, redirect,render_template
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate, migrate
 from flask.templating import render_template
-import sys
 
 app =  Flask(__name__)
 
