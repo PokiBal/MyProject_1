@@ -2,8 +2,10 @@ import time
 import pytest
 from selenium.webdriver.common.by import By
 from tests_logs import BaseClass
+from config_test import setup
 
-@pytest.mark.usefixtures("setup")
+
+# @pytest.mark.usefixtures("setup")
 class Test_class(BaseClass):
     def test_signup(self,setup):
         global driver
