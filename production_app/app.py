@@ -1,3 +1,4 @@
+import logging
 import os.path
 from flask import Flask, request, redirect,render_template
 from flask_sqlalchemy import SQLAlchemy
@@ -29,16 +30,19 @@ def projectIntro():
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
-    if request.method == "POST":
-        full_name = request.form.get("fullname")
-        # Set the environment variable for the Docker container
-        os.environ['USERNAME'] = full_name
-        email = request.form.get("email")
-        #creatiing new table named registration 
-        registration = Registration(full_name=full_name, email=email)
-        db.session.add(registration)
-        db.session.commit()
-        return redirect("/Welcome?fullname=" + full_name)
+    try:
+        if request.method == "POST":
+            full_name = request.form.get("fullname")
+            # Set the environment variable for the Docker container
+            os.environ['USERNAME'] = full_name
+            email = request.form.get("email")
+            #creatiing new table named registration 
+            registration = Registration(full_name=full_name, email=email)
+            db.session.add(registration)
+            db.session.commit()
+            return redirect("/Welcome?fullname=" + full_name)
+    except Exception as e:
+        logging.error("An error occurred during database operations: %s", str(e))
     return render_template("signup.html")
 
 
@@ -49,7 +53,7 @@ def hello_user():
 
 
 if __name__ == '__main__':
-   with app.app_context():
-       db.create_all()
-   app.run(host="0.0.0.0", port=5000)
+    with app.app_context():
+        db.create_all()
+    app.run(host="0.0.0.0", port=5000)
 
