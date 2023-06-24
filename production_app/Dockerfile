@@ -13,12 +13,6 @@ RUN pip install -r requirements.txt
 # copy every content from the local file to the image
 COPY . /app
 
-# configure the container to run in an executed manner
-#ENTRYPOINT [ "python" ]
+EXPOSE 5000
 
 CMD [ "python", "app.py"]
-
-
-# ENV USERNAME ""
-
-# CMD ["sh", "-c", "export USERNAME=$USERNAME && python3 app.py"]

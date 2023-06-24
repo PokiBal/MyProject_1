@@ -10,18 +10,26 @@ pipeline {
     }
 
     stages {
-        stage('GitSCM') {
+        // stage('GitSCM') {
+        //     steps {
+        //         checkout([
+        //         $class: 'GitSCM',
+        //         //branches - can add more than 1 branch
+        //         branches: [[name: 'main']],
+        //         //add the usrl for the branch you want to coonect to, adding the ssh url or https???
+        //         userRemoteConfigs: [[
+        //             url: 'https://github.com/PokiBal/MyProject_1.git',
+        //             credentialsId: ''
+        //         ]]
+        //     ])
+        //     }
+        // }
+        stage('Clone') {
             steps {
-                checkout([
-                $class: 'GitSCM',
-                //branches - can add more than 1 branch
-                branches: [[name: 'main']],
-                //add the usrl for the branch you want to coonect to, adding the ssh url or https???
-                userRemoteConfigs: [[
-                    url: 'https://github.com/PokiBal/MyProject_1.git',
-                    credentialsId: ''
-                ]]
-            ])
+                dir('/home/ubuntu/workspace/build and test pipeline/') {
+                    sh 'rm -rf *'
+                    sh 'git clone https://github.com/PokiBal/MyProject_1.git'
+                }
             }
         }
         stage('Build DockerImage'){
