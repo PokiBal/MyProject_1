@@ -21,7 +21,7 @@ class Test_class(BaseClass):
         hello_user = driver.find_element(By.CSS_SELECTOR,'.helo').text
         time.sleep(5)
         try:
-            assert hello_user == f"Hello {name}"
+            assert hello_user == f"Welcome {name}"
         except AssertionError as msg:
             log.error(msg)
             raise AssertionError(msg)
