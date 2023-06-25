@@ -77,7 +77,7 @@ pipeline {
             steps{
             dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app') {
                 withAWS(credentials: 'awscredentils'){
-                     sh 'aws s3 cp test_report.html s3://test-result-flask-app'
+                     sh 'aws s3 cp test_report.html s3://project1-results'
                 }
                 }
             }
