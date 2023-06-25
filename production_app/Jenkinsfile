@@ -77,7 +77,7 @@ pipeline {
         stage('S3upload') {
             steps {
                 withAWS(credentials: 'awscredentils', region: 'us-east-1') {
-                    s3Upload(bucket: 'project1-results', path: 'project1-results', file: 'test_report.html')
+                    s3Upload(bucket: 'project1-results', path: 'project1-results', file: 'MyProject_1/production_app/test_report.html')
                 }
             }
         }
