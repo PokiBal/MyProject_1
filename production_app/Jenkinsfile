@@ -63,14 +63,16 @@ pipeline {
         }
         stage('UploadToS3Bucket') {
             steps {
+                script {
+                    def fileRelativePath = "MyProject_1/production_app/test_report.html"
+                    def s3Key = "MyProject_1/production_app/test_report.html"
+
                     withAWS(region: "us-east-1", credentials: 'awscredentils'){
-                        def fileRelativePath = "MyProject_1/production_app/test_report.html"
-                        def s3Key = "MyProject_1/production_app/test_report.html"
                         s3Upload(file: fileRelativePath, bucket: "project1-results", path: s3Key)
                     }
                 }
+            }
         }
-
         stage('UploadToDunamoDB') {
             steps {
                 echo "UploadToDynamo"
