@@ -79,10 +79,9 @@ pipeline {
                 withAWS(credentials: 'awscredentils'){
                      sh 'aws s3 cp test_report.html s3://project1-results'
                 }
-                }
+            }
             }
         }
-
         // stage('S3upload') {
         //     steps {
         //         withAWS(credentials: 'awscredentils', region: 'us-east-1') {
