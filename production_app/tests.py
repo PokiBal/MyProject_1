@@ -11,7 +11,7 @@ class Test_class(BaseClass):
         global driver
         log = self.log_conf()
         driver = setup
-        driver.get("http://172.31.62.97:5000/")
+        driver.get("http://18.207.207.197:5000/")
         sign_up = driver.find_element(By.CSS_SELECTOR, ".signup")
         sign_up.click()
         name = 'inbal'
