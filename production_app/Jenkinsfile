@@ -61,18 +61,27 @@ pipeline {
                 }
             }
         }
-        stage('UploadToS3Bucket') {
-            steps {
-                script {
-                    def fileRelativePath = "MyProject_1/production_app/test_report.html"
-                    def s3Key = "MyProject_1/production_app/test_report.html"
+        // stage('UploadToS3Bucket') {
+        //     steps {
+        //         script {
+        //             def fileRelativePath = "MyProject_1/production_app/test_report.html"
+        //             def s3Key = "MyProject_1/production_app/test_report.html"
 
-                    withAWS(region: "us-east-1", credentials: 'awscredentils'){
-                        s3Upload(file: fileRelativePath, bucket: "project1-results", path: s3Key)
-                    }
+        //             withAWS(region: "us-east-1", credentials: 'awscredentils'){
+        //                 s3Upload(file: fileRelativePath, bucket: "project1-results", path: s3Key)
+        //             }
+        //         }
+        //     }
+        // }
+
+        stage('S3upload') {
+            steps {
+                withAWS(credentials: 'awscredentils', region: 'us-east-1') {
+                    s3Upload(bucket: 'project1-results', path: 'project1-results', file: 'test_report.html')
                 }
             }
         }
+
         stage('UploadToDunamoDB') {
             steps {
                 echo "UploadToDynamo"
