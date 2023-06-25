@@ -64,8 +64,10 @@ pipeline {
 
         stage('UploadToS3Bucket') {
             steps {
-                echo "UploadToS3Bucket"
-            }
+                    withAWS(region: "us-east-1", credentials: "${awscredentils}"){
+                        s3Upload(file:"test_report.html", bucket:"project1-results", path:"/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app/")
+                    }
+                }
         }
         stage('UploadToDunamoDB') {
             steps {
