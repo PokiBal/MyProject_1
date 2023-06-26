@@ -61,18 +61,6 @@ pipeline {
                 }
             }
         }
-        // stage('UploadToS3Bucket') {
-        //     steps {
-        //         script {
-        //             def fileRelativePath = "MyProject_1/production_app/test_report.html"
-        //             def s3Key = "MyProject_1/production_app/test_report.html"
-
-        //             withAWS(region: "us-east-1", credentials: 'awscredentils'){
-        //                 s3Upload(file: fileRelativePath, bucket: "project1-results", path: s3Key)
-        //             }
-        //         }
-        //     }
-        // }
         stage ('upload to s3 bucket'){
             steps{
             dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app') {
@@ -82,22 +70,32 @@ pipeline {
             }
             }
         }
-        // stage('S3upload') {
-        //     steps {
-        //         withAWS(credentials: 'awscredentils', region: 'us-east-1') {
-        //             s3Upload(bucket: 'project1-results', path: 'project1-results', file: 'test_report.html')
-        //         }
-        //     }
-        // }
 
-        stage('UploadToDunamoDB') {
-            steps {
-                echo "UploadToDynamo"
+        stage('UploadToDynamoDB') {
+            steps {       
+            dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app') {
+                script {
+                    def log_entry = sh(script: 'python3.8 logfile.py', returnStdout: true).trim()
+                    def (timestamp, message) = log_entry.split(',')
+                    message = message.replaceAll('"', '\\"') // add this line to escape quotation marks
+                    withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
+                    sh "aws dynamodb put-item --table-name project1-results --item \"{\\\"user\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"timestamp\\\": {\\\"S\\\": \\\"${timestamp}\\\"}, \\\"message\\\": {\\\"S\\\": \\\"${message}\\\"}}\""
+                    }
+                }
+            }
             }
         }
         stage('UploadToDockerHub') {
             steps {
-                echo "UploadToDockerHUb"
+                script{
+                    def dockerHubUsername = 'puki121'
+                    def dockerImageName = "${params.imagename}:${params.imagetag}"
+                    def dockerHubCredentials = 'docker-hub'
+
+                    sh "docker login -u ${dockerHubUsername} -p ${dockerHubCredentials}"
+                    sh "docker tag ${dockerImageName} ${dockerHubUsername}/${dockerImageName}"
+                    sh "docker push ${dockerHubUsername}/${dockerImageName}"
+                }
             }
         }
     }
