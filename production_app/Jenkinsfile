@@ -74,15 +74,15 @@ pipeline {
         stage('UploadImageToDockerHub') {
             steps {
                 script{
-                    def dockerHubUsername = 'puki121'
                     def dockerImageName = "${params.imagename}:${params.imagetag}"
-                    def dockerHubCredentials = 'docker-hub'
-
-                    sh "docker login -u ${dockerHubUsername} -p ${dockerHubCredentials}"
-                    sh "docker tag ${dockerImageName} ${dockerHubUsername}/${dockerImageName}"
-                    sh "docker push ${dockerHubUsername}/${dockerImageName}"
-                }
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh "docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD"
+                    sh "docker tag ${dockerImageName} puki121/project/${dockerImageName}"
+                    sh "docker push puki121/project/${dockerImageName}"}
             }
         }
     }
 }
+}
+    
+
