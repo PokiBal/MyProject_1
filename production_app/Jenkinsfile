@@ -10,20 +10,6 @@ pipeline {
     }
 
     stages {
-        // stage('GitSCM') {
-        //     steps {
-        //         checkout([
-        //         $class: 'GitSCM',
-        //         //branches - can add more than 1 branch
-        //         branches: [[name: 'main']],
-        //         //add the usrl for the branch you want to coonect to, adding the ssh url or https???
-        //         userRemoteConfigs: [[
-        //             url: 'https://github.com/PokiBal/MyProject_1.git',
-        //             credentialsId: ''
-        //         ]]
-        //     ])
-        //     }
-        // }
         stage('Clone') {
             steps {
                 dir('/home/ubuntu/workspace/build and test pipeline/') {
@@ -53,7 +39,7 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('test application') {
             steps {
                 echo "test"
                 dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app'){
@@ -73,19 +59,19 @@ pipeline {
 
         stage('UploadToDynamoDB') {
             steps {       
-            dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app') {
+            dir('home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app') {
                 script {
                     def log_entry = sh(script: 'python3.8 logfile.py', returnStdout: true).trim()
                     def (timestamp, message) = log_entry.split(',')
                     message = message.replaceAll('"', '\\"') // add this line to escape quotation marks
                     withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
-                    sh "aws dynamodb put-item --table-name project1-results --item \"{\\\"user\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"timestamp\\\": {\\\"S\\\": \\\"${timestamp}\\\"}, \\\"message\\\": {\\\"S\\\": \\\"${message}\\\"}}\""
+                    sh "aws dynamodb put-item --table-name project_build_report --item \"{\\\"user\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"timestamp\\\": {\\\"S\\\": \\\"${timestamp}\\\"}, \\\"message\\\": {\\\"S\\\": \\\"${message}\\\"}}\""
                     }
                 }
             }
             }
         }
-        stage('UploadToDockerHub') {
+        stage('UploadImageToDockerHub') {
             steps {
                 script{
                     def dockerHubUsername = 'puki121'
