@@ -79,7 +79,7 @@ pipeline {
                     sh "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_PASSWORD"
                     echo "login"
                     sh "docker tag ${dockerImageName} puki121/project/${dockerImageName}"
-                    sh "docker push puki121/project/${dockerImageName}"
+                    sh "docker push puki121/project:${dockerImageName}"
                 }
             }
         }
