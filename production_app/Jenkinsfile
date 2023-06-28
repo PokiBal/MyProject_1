@@ -90,12 +90,17 @@ pipeline {
 
     post {
         success {
-            // Triggering the freestyle job with parameters
-            build job: 'production_deploy', parameters: [
-                string(name: 'imagename', value: "${params.imagename}"),
-                string(name: 'imagetag', value: "${params.imagetag}")
-            ]
+            script {
+                try {
+                    build job: 'production_deploy', parameters: [
+                        string(name: 'imagename', value: "${params.imagename}"),
+                        string(name: 'imagetag', value: "${params.imagetag}")
+                    ]
+                } catch (Exception e) {
+                    echo "Failed to trigger the downstream job: ${e.message}"
+                }
+            }
         }
-
     }
 }
+
