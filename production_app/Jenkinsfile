@@ -85,8 +85,8 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_PASSWORD"
                     echo "login"
-                    sh "docker tag ${dockerImageName} puki121/project:${params.imagename}V${params.imagetag}"
-                    sh "docker push puki121/project:${params.imagename}V${params.imagetag}"
+                    sh "docker tag ${dockerImageName} puki121/project:${params.imagename}v${params.imagetag}"
+                    sh "docker push puki121/project:${params.imagename}v${params.imagetag}"
                     build job: 'production_deploy', parameters: [
                     string(name: 'imagename', value: params.imagename),
                     string(name: 'imagetag', value: params.imagetag)]                
