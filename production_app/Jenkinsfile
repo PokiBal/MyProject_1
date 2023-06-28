@@ -28,7 +28,7 @@ pipeline {
         }
         stage('Run Container'){
             steps{
-                sh "docker run -it --name my-flask -p 5000:5000 -d ${params.imagename}:${params.imagetag}"
+                sh "docker run -it --name flask-app -p 5000:5000 -d ${params.imagename}:${params.imagetag}"
                 }
         }
         stage("build user") {
@@ -85,6 +85,14 @@ pipeline {
             }
         }
     }
+        post {
+        success {
+            // Triggering the freestyle job with parameters
+            build job: 'production_deploy', parameters: [
+                string(name: 'imagename', value: "${params.imagename}"),
+                string(name: 'imagetag', value: "${params.imagetag}")
+            ]
+        }
 
     }
 }
