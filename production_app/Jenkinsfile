@@ -1,5 +1,6 @@
 pipeline {
     agent {label "slave1"}
+
     environment {
         TIME = sh(script: 'date "+%Y-%m-%d %H:%M:%S"', returnStdout: true).trim()
     }
@@ -84,8 +85,10 @@ pipeline {
                 }
             }
         }
+        }
     }
-        post {
+
+    post {
         success {
             // Triggering the freestyle job with parameters
             build job: 'production_deploy', parameters: [
@@ -96,6 +99,3 @@ pipeline {
 
     }
 }
-
-    
-
