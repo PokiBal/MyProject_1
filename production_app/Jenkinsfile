@@ -10,6 +10,12 @@ pipeline {
         string(name: 'imagetag', defaultValue: '', description: 'Image tag for Docker build')
     }
 
+
+// sh "docker run -p 5000:5000 -d --name flask-app ${params.imagename}:${params.imagetag}"
+// sudo docker pull puki121/project:${params.imagename}v${params.imagetag}
+// sudo docker pull puki121/project:flask_appv1.0
+// sudo docker run -it --name flask-app -p 5000:5000 -d puki121/project:flask_appv1.0
+
     stages {
         stage('Clone') {
             steps {
@@ -81,25 +87,12 @@ pipeline {
                     echo "login"
                     sh "docker tag ${dockerImageName} puki121/project:${params.imagename}V${params.imagetag}"
                     sh "docker push puki121/project:${params.imagename}V${params.imagetag}"
-
-                }
-            }
-        }
-        }
-    }
-
-    post {
-        success {
-            script {
-                try {
                     build job: 'production_deploy', parameters: [
-                        string(name: 'imagename', value: "${params.imagename}"),
-                        string(name: 'imagetag', value: "${params.imagetag}")
-                    ]
-                } catch (Exception e) {
-                    echo "Failed to trigger the downstream job: ${e.message}"
-                }
+                    string(name: 'imagename', value: params.imagename),
+                    string(name: 'imagetag', value: params.imagetag)]                
+                    }
             }
+        }
         }
     }
 }
