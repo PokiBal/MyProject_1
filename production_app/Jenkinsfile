@@ -36,7 +36,9 @@ pipeline {
             steps{
                 wrap([$class: 'BuildUser', useGitAuthor: true]) {
                     sh "export USERNAME=${BUILD_USER}"
+                    echo 'BUILD_USER'
                 }
+                echo 'BUILD_USER'
             }
         }
 
