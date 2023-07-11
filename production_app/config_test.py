@@ -1,12 +1,12 @@
-from webdriver_manager.chrome import ChromeDriverManager
+import pytest
+from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from selenium import webdriver
-import pytest
+from webdriver_manager.chrome import ChromeDriverManager
 
 @pytest.fixture(scope="class")
 def setup():
-    chrome_driver_path = ChromeDriverManager(version='latest').install()
+    chrome_driver_path = ChromeDriverManager().install()
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_experimental_option("detach", True)
