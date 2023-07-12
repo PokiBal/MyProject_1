@@ -6,7 +6,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 # @pytest.fixture(scope="class")
 # def setup():
-#     driver = webdriver.Chrome(executable_path='/usr/bin/google-chrome', service=service_obj, options=chrome_options)
 #     chrome_driver_path = ChromeDriverManager().install()
 #     chrome_options = Options()
 #     chrome_options.add_argument("--headless")
@@ -16,13 +15,12 @@ from webdriver_manager.chrome import ChromeDriverManager
 #     driver.implicitly_wait(5)
 #     return driver
 
+
 @pytest.fixture(scope="class")
 def setup():
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_experimental_option("detach", True)
-    chrome_driver_path = ChromeDriverManager().install()
-    service_obj = Service(chrome_driver_path)
-    driver = webdriver.Chrome(executable_path='/usr/bin/google-chrome', service=service_obj, options=chrome_options)
+    driver = webdriver.Chrome(service=Service(), options=chrome_options)
     driver.implicitly_wait(5)
     return driver
