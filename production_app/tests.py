@@ -29,24 +29,20 @@
 #             raise AssertionError(msg)
 #         else:
 #             log.info("Test Passed successfully")
+
+
 import pytest
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import time
 import logging
-import os
-
-# Set up logging
-logging.basicConfig(filename='test.log', level=logging.INFO,
-                    format='%(asctime)s:%(levelname)s:%(message)s')
 
 class Test_class:
 
     @pytest.fixture(scope="module", autouse=True)
     def setup(self):
         global driver
-        options = Options()
+        options = webdriver.ChromeOptions()
         options.add_argument("--headless")  # Ensure GUI is off
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
@@ -62,8 +58,6 @@ class Test_class:
 
     def test_signup(self, setup):
         global driver
-        logging = self.setup()
-        driver = setup
         driver.get("http://44.234.84.98:5000/")  # slave_1
         sign_up = driver.find_element(By.CSS_SELECTOR, ".signup")
         sign_up.click()
@@ -80,5 +74,3 @@ class Test_class:
             raise AssertionError(msg)
         else:
             logging.info("Test Passed successfully")
-
-
