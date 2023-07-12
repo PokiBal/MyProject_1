@@ -3,6 +3,8 @@ import pytest
 from selenium.webdriver.common.by import By
 from tests_logs import BaseClass
 from config_test import setup
+from webdriver_manager.chrome import ChromeDriverManager
+
 
 
 # @pytest.mark.usefixtures("setup")
@@ -11,7 +13,7 @@ class Test_class(BaseClass):
         global driver
         log = self.log_conf()
         driver = setup
-        driver.get("http://35.93.82.6:5000/")#slave_1
+        driver.get("http://34.222.205.54:5000/")#slave_1
         sign_up = driver.find_element(By.CSS_SELECTOR, ".signup")
         sign_up.click()
         name = 'inbal'
