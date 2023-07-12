@@ -1,5 +1,5 @@
 pipeline {
-    agent {label "build-test-slave"}
+    agent {label "build-test-slave-2"}
 
     environment {
         TIME = sh(script: 'date "+%Y-%m-%d %H:%M:%S"', returnStdout: true).trim()
