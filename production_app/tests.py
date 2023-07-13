@@ -5,30 +5,32 @@ import time
 import logging
 
 
-def setup_logging():
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
-
-    # create a file handler
-    handler = logging.FileHandler('logfile.log')
-    handler.setLevel(logging.INFO)
-
-    # create a logging format
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-
-    # add the handlers to the logger
-    logger.addHandler(handler)
-
-    return logger
-
-
 class Test_class:
+
+    def __init__(self):
+        self.logger = None
+
+    def setup_logging(self):
+        logger = logging.getLogger(__name__)
+        logger.setLevel(logging.INFO)
+
+        # create a file handler
+        handler = logging.FileHandler('logfile.log')
+        handler.setLevel(logging.INFO)
+
+        # create a logging format
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+
+        # add the handlers to the logger
+        logger.addHandler(handler)
+
+        return logger
 
     @pytest.fixture(scope="module", autouse=True)
     def setup(self):
         global driver
-        self.logger = setup_logging()
+        self.logger = self.setup_logging()
 
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")  # Ensure GUI is off
