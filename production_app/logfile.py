@@ -11,4 +11,4 @@ with open("logfile.log", "r") as f:
         message = entry[4].strip().replace('"', '\\"')
 
 print(f"{timestamp}, {message}")
-s
+
