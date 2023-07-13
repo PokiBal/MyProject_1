@@ -62,7 +62,7 @@ pipeline {
                     script {
                         def logEntry = sh(script: 'tail -n 1 logfile.log', returnStdout: true).trim()
                         def entry = logEntry.strip().split(":")
-                        def timestamp = ":".join(entry[:2])
+                        def timestamp = entry[0] + ":" + entry[1]
                         def message = entry[4].strip().replaceAll('"', '\\"')
 
                         withAWS(credentials: 'AWScredentials', region: 'us-east-1') {
@@ -72,7 +72,6 @@ pipeline {
                 }
             }
         }
-
         stage('UploadImageToDockerHub') {
         steps {
             script {
