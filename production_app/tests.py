@@ -44,7 +44,7 @@ class Test_class:
         driver.quit()
         self.logger.info("Test Completed")
 
-    def test_signup(self, setup):
+    def test_signup(self):
         global driver
         driver.get("http://34.223.43.96:5000/")  # slave_1
         sign_up = driver.find_element(By.CSS_SELECTOR, ".signup")
