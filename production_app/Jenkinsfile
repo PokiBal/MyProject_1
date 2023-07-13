@@ -46,19 +46,19 @@ pipeline {
                 echo 'BUILD_USER'
             }
         }
-
         stage('test application') {
             steps {
                 echo "test"
                 dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app') {
                     sh 'pytest tests.py::Test_class::test_signup --html=test_report.html'
-                    def consoleOutput = currentBuild.rawBuild.getLog(1000).join('\n')
-                    def testResult = getTestResultFromConsole(consoleOutput)
-                    uploadToDynamoDB(testResult)
+                    script {
+                        def consoleOutput = currentBuild.rawBuild.getLog(1000).join('\n')
+                        def testResult = getTestResultFromConsole(consoleOutput)
+                        uploadToDynamoDB(testResult)
+                    }
                 }
             }
         }
-
         stage ('upload to s3 bucket') {
             steps {
                 withAWS(credentials: 'AWScredentials') {
