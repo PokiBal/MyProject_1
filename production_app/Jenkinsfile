@@ -66,22 +66,20 @@ pipeline {
                 }
             }
         }
-
         stage('UploadToDynamoDB') {
             steps {
                 script {
-                    def logEntry = sh(script: 'tail -n 1 logfile.log', returnStdout: true).trim()
+                    def logEntry = sh(script: 'tail -n 1 /home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app/logfile.log', returnStdout: true).trim()
                     def entry = logEntry.strip().split(":")
-                    def timestamp = ":".join(entry[:2])
+                    def timestamp = entry[0..1].join(':')
                     def message = entry[4].strip().replaceAll('"', '\\"')
 
-                    withAWS(credentials: 'AWScredentials', region: 'us-west-2') {
-                        sh "aws dynamodb put-item --table-name project_build_report --item \"{\\\"user\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"date\\\": {\\\"S\\\": \\\"${timestamp}\\\"}, \\\"result\\\": {\\\"S\\\": \\\"${message}\\\"}}\""
+                    withAWS(credentials: 'AWScredentials') {
+                        sh "aws dynamodb put-item --table-name project_build_report --region <YOUR_REGION> --item \"{\\\"user\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"date\\\": {\\\"S\\\": \\\"${timestamp}\\\"}, \\\"result\\\": {\\\"S\\\": \\\"${message}\\\"}}\""
                     }
                 }
             }
         }
-
         stage('UploadImageToDockerHub') {
             steps {
                 script {
