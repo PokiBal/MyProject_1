@@ -53,14 +53,14 @@ pipeline {
         stage('test application') {
             steps {
                 echo "test"
-                dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app'){
+                dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app/'){
                 sh 'pytest tests.py::Test_class::test_signup --html=test_report.html'
                 }
             }
         }
         stage ('upload to s3 bucket'){
             steps{
-            dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app') {
+            dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app/') {
                 withAWS(credentials: 'AWScredentials'){
                      sh 'aws s3 cp test_report.html s3://project1-results'
                 }
