@@ -60,21 +60,19 @@ pipeline {
             steps {
                 dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app') {
                     script {
-                        def log_entry = sh(script: 'python3.8 logfile.py', returnStdout: true).trim()
-                        def log_parts = log_entry.split(',')
-                        if (log_parts.size() >= 2) {
-                            def timestamp = log_parts[0]
-                            def message = log_parts[1].replaceAll('"', '\\"')
-                            withAWS(credentials: 'AWScredentials', region: 'us-east-1') {
-                                sh "aws dynamodb put-item --table-name project_build_report --item \"{\\\"user\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"date\\\": {\\\"S\\\": \\\"${timestamp}\\\"}, \\\"result\\\": {\\\"S\\\": \\\"${message}\\\"}}\""
-                            }
-                        } else {
-                            error "Invalid log entry format: $log_entry"
+                        def logEntry = sh(script: 'tail -n 1 logfile.log', returnStdout: true).trim()
+                        def entry = logEntry.strip().split(":")
+                        def timestamp = ":".join(entry[:2])
+                        def message = entry[4].strip().replaceAll('"', '\\"')
+
+                        withAWS(credentials: 'AWScredentials', region: 'us-east-1') {
+                            sh "aws dynamodb put-item --table-name project_build_report --item \"{\\\"user\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"date\\\": {\\\"S\\\": \\\"${timestamp}\\\"}, \\\"result\\\": {\\\"S\\\": \\\"${message}\\\"}}\""
                         }
                     }
                 }
             }
         }
+
         stage('UploadImageToDockerHub') {
         steps {
             script {
