@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label "build-test-slave-2"
-    }
+    agent {label "build-test-slave-2"}
 
     environment {
         TIME = sh(script: 'date "+%Y-%m-%d %H:%M:%S"', returnStdout: true).trim()
@@ -21,24 +19,21 @@ pipeline {
                 }
             }
         }
-
-        stage('Build DockerImage') {
-            steps {
+        stage('Build DockerImage'){
+            steps{
                 echo "build image"
-                dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app') {
-                    sh "docker build -t ${params.imagename}:${params.imagetag} ."
+                dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app'){
+                sh "docker build -t ${params.imagename}:${params.imagetag} ."
                 }
             }
         }
-
-        stage('Run Container') {
-            steps {
+        stage('Run Container'){
+            steps{
                 sh "docker run -it --name flask-app -p 5000:5000 -d ${params.imagename}:${params.imagetag}"
-            }
+                }
         }
-
         stage("build user") {
-            steps {
+            steps{
                 wrap([$class: 'BuildUser', useGitAuthor: true]) {
                     sh "export USERNAME=${BUILD_USER}"
                     echo 'BUILD_USER'
@@ -49,19 +44,12 @@ pipeline {
         stage('test application') {
             steps {
                 echo "test"
-                dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app') {
-                    sh 'pytest tests.py::Test_class::test_signup --html=test_report.html'
-                    script {
-                        sh 'echo "archive the console output"'
-                        archiveArtifacts 'consoleText'
-                        def consoleOutput = readFile('consoleText')
-                        def testResult = getTestResultFromConsole(consoleOutput)
-                        uploadToDynamoDB(testResult)
-                    }
+                dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app/'){
+                sh 'pytest tests.py::Test_class::test_signup --html=test_report.html'
                 }
             }
         }
-        stage ('upload to s3 bucket') {
+        stage ('upload to s3 bucket'){
             steps {
                 withAWS(credentials: 'AWScredentials') {
                     sh '/root/.local/bin/aws s3 cp "/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app/test_report.html" "s3://project1-results"'
@@ -69,60 +57,35 @@ pipeline {
             }
         }
         stage('UploadToDynamoDB') {
-            steps {
+            steps {       
+            dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app') {
                 script {
-                    def logEntry = sh(script: 'tail -n 1 /home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app/logfile.log', returnStdout: true).trim()
-                    def entry = logEntry.strip().split(":")
-                    def timestamp = entry[0..1].join(':')
-                    def message = entry[4].strip().replaceAll('"', '\\"')
-
+                    def log_entry = sh(script: 'python3.8 logfile.py', returnStdout: true).trim()
+                    def (timestamp, message) = log_entry.split(',')
+                    message = message.replaceAll('"', '\\"') // add this line to escape quotation marks
                     withAWS(credentials: 'AWScredentials', region: 'us-west-2') {
-                        sh """
-                            aws dynamodb put-item \
-                            --table-name project_build_report \
-                            --region us-west-2 \
-                            --item '{\"user\": {\"S\": \"${env.BUILD_USER}\"}, \"date\": {\"S\": \"${timestamp}\"}, \"result\": {\"S\": \"${message}\"}}'
-                        """
+                    sh "aws dynamodb put-item --table-name project_build_report --item \"{\\\"user\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"date\\\": {\\\"S\\\": \\\"${timestamp}\\\"}, \\\"result\\\": {\\\"S\\\": \\\"${message}\\\"}}\""
                     }
                 }
+            }
             }
         }
         stage('UploadImageToDockerHub') {
-            steps {
-                script {
-                    def dockerImageName = "${params.imagename}:${params.imagetag}"
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_PASSWORD"
-                        echo "login"
-                        sh "docker tag ${dockerImageName} puki121/project:${params.imagetag}"
-                        sh "docker push puki121/project:${params.imagetag}"
-                        build job: 'production_2', parameters: [
-                            string(name: 'imagetag', value: params.imagetag)
-                        ]
+        steps {
+            script {
+                def dockerImageName = "${params.imagename}:${params.imagetag}"
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_PASSWORD"
+                    echo "login"
+                    sh "docker tag ${dockerImageName} puki121/project:${params.imagetag}"
+                    sh "docker push puki121/project:${params.imagetag}"
+                    build job: 'production_2', parameters: [
+                    // string(name: 'imagename', value: params.imagename),
+                    string(name: 'imagetag', value: params.imagetag)]                
                     }
-                }
             }
+        }
         }
     }
 }
 
-def getTestResultFromConsole(consoleOutput) {
-    def testResult = consoleOutput =~ /.*(\d+)\s+passed.*/
-
-    if (testResult) {
-        //return testResult[0][1] as Integer > 0 ? 'PASS' : 'FAIL'
-        return (testResult[0][1] as Integer) > 0 ? 'PASS' : 'FAIL'
-
-    }
-
-    return 'UNKNOWN'
-}
-
-def uploadToDynamoDB(testResult) {
-    def timestamp = TIME
-    def user = env.BUILD_USER
-
-    withAWS(credentials: 'AWScredentials', region: 'us-west-2') {
-        sh "aws dynamodb put-item --table-name project_build_report --item \"{\\\"user\\\": {\\\"S\\\": \\\"${user}\\\"}, \\\"date\\\": {\\\"S\\\": \\\"${timestamp}\\\"}, \\\"result\\\": {\\\"S\\\": \\\"${testResult}\\\"}}\""
-    }
-}
