@@ -74,8 +74,13 @@ pipeline {
                     def timestamp = entry[0..1].join(':')
                     def message = entry[4].strip().replaceAll('"', '\\"')
 
-                    withAWS(credentials: 'AWScredentials') {
-                        sh "aws dynamodb put-item --table-name project_build_report --region <YOUR_REGION> --item \"{\\\"user\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"date\\\": {\\\"S\\\": \\\"${timestamp}\\\"}, \\\"result\\\": {\\\"S\\\": \\\"${message}\\\"}}\""
+                    withAWS(credentials: 'AWScredentials', region: 'us-west-2') {
+                        sh """
+                            aws dynamodb put-item \
+                            --table-name project_build_report \
+                            --region us-west-2 \
+                            --item '{\"user\": {\"S\": \"${env.BUILD_USER}\"}, \"date\": {\"S\": \"${timestamp}\"}, \"result\": {\"S\": \"${message}\"}}'
+                        """
                     }
                 }
             }
