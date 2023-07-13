@@ -108,7 +108,9 @@ def getTestResultFromConsole(consoleOutput) {
     def testResult = consoleOutput =~ /.*(\d+)\s+passed.*/
 
     if (testResult) {
-        return testResult[0][1] as Integer > 0 ? 'PASS' : 'FAIL'
+        //return testResult[0][1] as Integer > 0 ? 'PASS' : 'FAIL'
+        return (testResult[0][1] as Integer) > 0 ? 'PASS' : 'FAIL'
+
     }
 
     return 'UNKNOWN'
