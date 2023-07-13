@@ -32,15 +32,14 @@ pipeline {
                 sh "docker run -it --name flask-app -p 5000:5000 -d ${params.imagename}:${params.imagetag}"
                 }
         }
-     stage("build user") {
-    steps{
-        wrap([$class: 'BuildUser', useGitAuthor: true]) {
-            sh "export USERNAME=${BUILD_USER}"
-            echo 'BUILD_USER'
+        stage("build user") {
+            steps {
+                script {
+                    env.BUILD_USER = 'Inbal Rozenfeld'
+                }
+                echo 'BUILD_USER: ' + env.BUILD_USER
+            }
         }
-        echo 'BUILD_USER'
-    }
-}
 
         stage('test application') {
             steps {

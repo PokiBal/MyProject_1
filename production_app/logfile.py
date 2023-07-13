@@ -5,12 +5,13 @@ with open("logfile.log", "r") as f:
     if len(entry) < 4:
         print("Unexpected log format.")
         timestamp = "Unknown"
-        message = "test"
+        message = "Unknown"
     else:
         timestamp = entry[0]
         message = entry[3].strip().replace('"', '\\"')
 
 print(f"{timestamp}, {message}")
+
 
 
 # with open("logfile.log", "r") as f:
