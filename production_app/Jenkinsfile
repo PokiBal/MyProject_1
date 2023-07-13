@@ -52,8 +52,7 @@ pipeline {
         stage ('upload to s3 bucket'){
             steps {
                 withAWS(credentials: 'AWScredentials') {
-                    sh 'whoami'
-                    sh '/root/.local/bin/aws s3 cp /home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app/test_report.html s3://project1-results'
+                    sh '/root/.local/bin/aws s3 cp "/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app/test_report.html" "s3://project1-results"'
                 }
             }
         }
