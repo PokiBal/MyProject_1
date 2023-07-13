@@ -7,8 +7,25 @@ import logging
 
 class Test_class:
 
-    def __init__(self):
-        self.logger = None
+    logger = None
+
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.logger = self.setup_logging()
+
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless")  # Ensure GUI is off
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--window-size=1920,1080")
+
+        driver = webdriver.Chrome(options=options)  # Using ChromeDriver instead of Firefox
+        driver.implicitly_wait(5)
+        driver.maximize_window()
+        yield driver
+        driver.close()
+        driver.quit()
+        self.logger.info("Test Completed")
 
     def setup_logging(self):
         logger = logging.getLogger(__name__)
@@ -27,27 +44,8 @@ class Test_class:
 
         return logger
 
-    @pytest.fixture(scope="module", autouse=True)
-    def setup(self):
-        global driver
-        self.logger = self.setup_logging()
-
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless")  # Ensure GUI is off
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--window-size=1920,1080")
-
-        driver = webdriver.Chrome(options=options)  # Using ChromeDriver instead of Firefox
-        driver.implicitly_wait(5)
-        driver.maximize_window()
-        yield
-        driver.close()
-        driver.quit()
-        self.logger.info("Test Completed")
-
-    def test_signup(self):
-        global driver
+    def test_signup(self, setup):
+        driver = setup
         driver.get("http://34.223.43.96:5000/")  # slave_1
         sign_up = driver.find_element(By.CSS_SELECTOR, ".signup")
         sign_up.click()
