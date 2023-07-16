@@ -46,7 +46,7 @@ class Test_class:
 
     def test_signup(self, setup):
         driver = setup
-        driver.get("http://34.223.43.96:5000/")  # slave_1
+        driver.get("http://35.86.197.56:5000/")  # slave_1
         sign_up = driver.find_element(By.CSS_SELECTOR, ".signup")
         sign_up.click()
         name = 'inbal'
