@@ -40,7 +40,6 @@ pipeline {
                 echo 'BUILD_USER: ' + env.BUILD_USER
             }
         }
-
         stage('test application') {
             steps {
                 echo "test"
@@ -79,7 +78,7 @@ pipeline {
                     echo "login"
                     sh "docker tag ${dockerImageName} puki121/project:${params.imagetag}"
                     sh "docker push puki121/project:${params.imagetag}"
-                    build job: 'production_2', parameters: [
+                    build job: 'deployment', parameters: [
                     // string(name: 'imagename', value: params.imagename),
                     string(name: 'imagetag', value: params.imagetag)]                
                     }
