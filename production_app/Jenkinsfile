@@ -50,10 +50,10 @@ pipeline {
                 always {
                     dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app') {
                     script {
-                        sh 'whoami'
-                        sh 'pwd'
-                        def testResult = sh(script: 'cat test_report.html | grep "FAIL" || true', returnStatus: true)
-                        if (testResult == 0) {
+                        sh 'grep -q "FAIL" test_report.html || echo "PASS" > test_status.txt'
+                        def testStatus = readFile('test_status.txt').trim()
+
+                        if (testStatus == "PASS") {
                             error("Tests failed. Aborting the pipeline.")
                         }
                     }
