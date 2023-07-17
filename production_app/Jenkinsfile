@@ -52,15 +52,15 @@ pipeline {
                     script {
                         echo "Test post"
                         sh 'cat test_report.html'
-                        // sh 'grep -q "FAIL" test_report.html || echo "PASS" > test_status.txt'
-                        // def testStatus = readFile('test_status.txt').trim()
+                        sh 'grep -q "FAIL" test_report.html || echo "PASS" > test_status.txt'
+                        def testStatus = readFile('test_status.txt').trim()
 
-                        // if (testStatus == "PASS") {
-                        //     error("Tests failed. Aborting the pipeline.")
-                        // }
+                        if (testStatus == "PASS") {
+                            error("Tests failed. Aborting the pipeline.")
+                            }
+                        }
                     }
-                    }
-                }
+                 }   
             }
         }
         stage('Upload to S3 bucket') {
