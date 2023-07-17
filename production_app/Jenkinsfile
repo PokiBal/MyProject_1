@@ -28,7 +28,8 @@ pipeline {
         }
         stage('Run Container') {
             steps {
-                sh "docker run -it --name flask-app -p 5000:5000 -d ${params.imagename}:$BUILD_NUMBER"
+                sh 'echo 1.0.$BUILD_NUMBER'
+                sh "docker run -it --name flask-app -p 5000:5000 -d ${params.imagename}:1.0.$BUILD_NUMBER"
             }
         }
         stage("build user") {
