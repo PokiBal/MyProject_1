@@ -17,4 +17,4 @@
 #     return driver
 
 # Define your base url, something like
-BASE_URL = "http://35.87.196.226:5000"
+BASE_URL = "http://35.86.228.115:5000"
