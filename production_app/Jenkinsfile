@@ -22,7 +22,7 @@ pipeline {
             steps {
                 echo "Build image"
                 dir('/home/ubuntu/workspace/build and test pipeline/MyProject_1/production_app') {
-                    sh "docker build -t ${params.imagename}:$BUILD_NUMBER ."
+                    sh "docker build -t ${params.imagename}:1.0.$BUILD_NUMBER ."
                 }
             }
         }
@@ -87,11 +87,11 @@ pipeline {
         stage('UploadImageToDockerHub') {
             steps {
                 script {
-                    def dockerImageName = "${params.imagename}"
+                    def dockerImageName = "${params.imagename}:1.0.$BUILD_NUMBER"
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_PASSWORD"
                         echo "Login"
-                        def dockerHubImageName = "puki121/project:$BUILD_NUMBER"
+                        def dockerHubImageName = "puki121/project:1.0.$BUILD_NUMBER"
                         sh "docker tag ${dockerImageName} ${dockerHubImageName}"
                         sh "docker push ${dockerHubImageName}"
                         build job: 'deployment', parameters: [
