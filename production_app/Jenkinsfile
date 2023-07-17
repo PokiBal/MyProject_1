@@ -55,8 +55,8 @@ pipeline {
                         sh 'grep -q "FAIL" test_report.html || echo "PASS" > test_status.txt'
                         def testStatus = readFile('test_status.txt').trim()
 
-                        if (testStatus == "PASS") {
-                            error("Tests failed. Aborting the pipeline.")
+                        if (testStatus == "FAIL") {
+                            error("The tests failed, Aborting the pipeline.")
                             }
                         }
                     }
