@@ -1,10 +1,6 @@
 pipeline {
     agent { label "build-test-slave-2" }
 
-    environment {
-        TIME = sh(script: 'date "+%Y-%m-%d %H:%M:%S"', returnStdout: true).trim()
-    }
-
     parameters {
         string(name: 'imagename', defaultValue: '', description: 'Name of the Docker image')
     }
@@ -98,7 +94,7 @@ pipeline {
                         build job: 'deployment', parameters: [
                             string(name: 'imagename', value: dockerImageName),
                             string(name: 'imagetag', value: BUILD_NUMBER)
-                        ]
+                        ], wait: false
                     }
                 }
             }
