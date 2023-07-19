@@ -3,6 +3,7 @@ import os.path
 from flask import Flask, request, redirect,render_template
 from flask_sqlalchemy import SQLAlchemy
 from prometheus_flask_exporter import PrometheusMetrics
+from flask import Response
 
 
 app =  Flask(__name__)
@@ -27,6 +28,9 @@ class Registration(db.Model):
 def projectIntro():
     return render_template("Introduction.html")
 
+@app.route('/metrics')
+def metrics():
+    return Response(metrics.export(), mimetype='text/plain')
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
