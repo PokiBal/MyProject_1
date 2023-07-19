@@ -77,6 +77,7 @@ pipeline {
                         withAWS(credentials: 'AWScredentials', region: 'us-west-2') {
                             sh "/root/.local/bin/aws dynamodb put-item --table-name project_build_report --item \"{\\\"user\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"date\\\": {\\\"S\\\": \\\"${timestamp}\\\"}, \\\"result\\\": {\\\"S\\\": \\\"${message}\\\"}}\""
                         }
+                    }
                 }
             }
         }
