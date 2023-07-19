@@ -73,7 +73,6 @@ pipeline {
                     script {
                         def log_entry = sh(script: 'python3.8 logfile.py', returnStdout: true).trim()
                         def (timestamp, message) = log_entry.split(',')
-                        message = message.trim()
                         message = message.replaceAll('"', '\\"')
                         withAWS(credentials: 'AWScredentials', region: 'us-west-2') {
                             sh "/root/.local/bin/aws dynamodb put-item --table-name project_build_report --item \"{\\\"user\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"date\\\": {\\\"S\\\": \\\"${timestamp}\\\"}, \\\"result\\\": {\\\"S\\\": \\\"${message}\\\"}}\""
