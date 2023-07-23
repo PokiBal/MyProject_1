@@ -1,21 +1,66 @@
 body {
-    background-image: url("Capture2.PNG");
-    background-repeat: no-repeat;
-    background-size:cover;
-    background-attachment: fixed;
-  }
+  background-image: url("Capture2.PNG");
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-attachment: fixed;
+}
 
-  h2 {
-    text-align: center;
-    font-size:xx-large;
-    font-family: 'Montserrat', sans-serif;
-    margin-top:5%
-  }
+h2 {
+  text-align: center;
+  font-size:xx-large;
+  font-family: 'Montserrat', sans-serif;
+  margin-top:5%
+}
 
-  
-  p,a{
-    text-align: center;
-    font-size:xx-large;
-    font-family: 'Montserrat', sans-serif;
-    margin-top:5%
+@keyframes fly {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.bird {
+  position: absolute;
+  top: 50px;
+  animation: fly 5s linear infinite;
+}
+
+.bird-container,
+.bird-container2{
+  position: absolute;
+  width: 30%;
+  height: 10%;
+  animation: animate-bird 12s linear infinite;
+}
+
+.bird-container2{
+  animation: animate-bird1 5s linear infinite;
+}
+
+@keyframes bird {
+  100%{
+      background-position: -3600px 0;
   }
+}
+
+@keyframes animate-bird {
+  0%{
+      transform: translate(-10%,-10%) rotate(0deg);
+  }
+  50%{
+      transform: translate(800px,40%) scale(0.5) rotateY(20deg);
+  }
+  100%{
+      transform: translate(1800px,60%) scale(0.1) rotateY(0deg);
+  }
+}
+
+@keyframes animate-bird1 {
+  0%{
+      transform: translate(-0%,-20%) rotate(0deg);
+  }
+  50%{
+      transform: translate(600px,30%) scale(0.5) rotateY(20deg);
+  }
+  100%{
+      transform: translate(1200px,-100px) scale(0.1) rotateY(0deg);
+  }
+}

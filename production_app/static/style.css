@@ -1,80 +1,71 @@
-
-
- /* Set background image */
 body {
-  background-image: url("Capture2.PNG");
-  background-repeat: no-repeat;
-  background-size:cover;
-  background-attachment: fixed;
+    background-image: url("Capture2.PNG");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Montserrat', sans-serif;
 }
 
-/* Center form on page */
-.form-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+.container {
+    width: 400px;
+    height: 580px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    height: 100%;
+    color: #2a4e38;
 }
 
-/* Style form elements */
-form {
-  background-color: rgba(255, 255, 255, 0.638);
-  padding: 50px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  text-align: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.welcome-message {
+    margin-bottom: 20px;
+    font-size: 2em;
+    color: #23482b;
+    font-weight: bold;
 }
 
-h2 {
-  margin-top: 0;
-  margin-bottom: 50px;
-  margin-right: auto;
-}
-
-/* Set custom font */
-body {
-  font-family: 'Montserrat', sans-serif;
-}
-
-
-input[type="submit"] {
-  position: relative;
-  left: auto; /* adjust the value to move the submit button left or right */
-  top: 10px;
-  background-color: #198798;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: white;
-  padding: 6px 16px;
-  margin: 10px 0;
-  border: none;
-  cursor: pointer;
-  width: 50%;
-  opacity: 0.9;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  
+.signup-form {
+    position: relative;
+    width: 400px; /* adjust this value to make the form wider or narrower */
+    height: 440px;
+    background: transparent;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 input[type="text"] {
-  border: none;
-  background-color: #d0e2d3;
-  padding: 15px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  font: rgb(23, 23, 23);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
-input[type="text"]::placeholder {
-  color: black;
-  display: inline-block;
-  text-align: left;
-  vertical-align: middle;
-  line-height: normal;
-  margin-bottom: auto;
+input[type="submit"] {
+    width: 250px;
+    height: 40px;
+    padding: 10px;
+    margin-bottom: auto;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    background-color: #255832;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-items:center;
 }
 
+input[type="submit"]:hover {
+    background-color: #195934;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-family: inherit;
+}

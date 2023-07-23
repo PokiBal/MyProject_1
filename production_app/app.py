@@ -24,15 +24,15 @@ class Registration(db.Model):
         return super().__repr__()
 
 
-@app.route('/')
-def projectIntro():
-    return render_template("Introduction.html")
+# @app.route('/')
+# def projectIntro():
+#     return render_template("Introduction.html")
 
 @app.route('/metrics')
 def metrics():
     return Response(metrics.export(), mimetype='text/plain')
 
-@app.route("/signup", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def signup():
     try:
         if request.method == "POST":
